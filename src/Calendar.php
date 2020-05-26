@@ -36,13 +36,19 @@ class Calendar
     }
 
     /**
-     * Add or update subscriber
+     * Create a new event
      *
-     * @param string $email - Subscriber Email
-     * @param string $drip_id - Current user Drip ID for update
-     * @param array $custom_fields - Array of custom fields to save to user
+     * @param string $calendar_id - Calendar ID
+     * @param string $summary - Summary of event
+     * @param string $location - Location of event
+     * @param string $description - Description of event
+     * @param string $start - Start date / time of event
+     * @param string $end - End date / time of event
+     * @param string $timezone - Timezone of event
+     * @param array $recurrence - Recurrence of event
+     * @param array $attendees - Attendees for event
      */
-    public function add(string $calendar_id, string $summary, string $location = '', string $description = '', string $start, string $end, $timezone, array $recurrence = [], array $attendees = [], array $reminders = [])
+    public function createEvent(string $calendar_id, string $summary, string $location = '', string $description = '', string $start, string $end, string $timezone, array $recurrence = [], array $attendees = [], array $reminders = [])
     {
         // Format start / end times
         $start = date("c", strtotime($start));
@@ -60,7 +66,7 @@ class Calendar
                 'dateTime' => $end,
                 'timeZone' => $timezone,
             ],
-            'recurrence' => $recurrence,
+            'recurrence' => $recurrence, // [ 'RRULE:FREQ=DAILY;COUNT=2' ]
             'attendees' => $attendees,
             'reminders' => $reminders,
         ]);
@@ -70,17 +76,28 @@ class Calendar
         return $event;
     }
 
-    public function read(string $calendar_id)
+    /**
+     * List events
+     *
+     * @param string $calendar_id - Calendar ID
+     * @param string $date - Only return events for specific date
+     * @param string $timezone - Results based on specific timezone
+     */
+    public function listEvents(string $calendar_id, string $date = '', string $timezone = '')
     {
-        // $optParams = [
-        //     'maxResults' => 10,
-        //     'orderBy' => 'startTime',
-        //     'singleEvents' => true,
-        //     'timeMin' => date('c'),
-        // ];
-        $response = $this->service->events->listEvents($calendar_id, $optParams);
-        $events = $response->getItems();
+        $opts = [];
 
-        return $events;
+        if ($date) {
+            $opts = [
+                'timeMin' => date("c", strtotime($date . '00:00:00')),
+                'timeMax' => date("c", strtotime($date . '23:59:59')),
+                'timeZone' => $timezone
+            ];
+        }
+
+        $response = $this->service->events->listEvents($calendar_id, $opts);
+        $values = $response->getItems();
+
+        return $values;
     }
 }
