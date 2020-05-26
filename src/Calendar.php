@@ -53,18 +53,13 @@ class Calendar
                 'timeZone' => $timezone,
             ],
             'end' => [
-                'dateTime' => $end, // 2015-05-28T17:00:00-07:00'
+                'dateTime' => $end,
                 'timeZone' => $timezone,
             ],
-            'recurrence' => $recurrence, // [ 'RRULE:FREQ=DAILY;COUNT=2' ]
+            'recurrence' => $recurrence,
             'attendees' => $attendees,
             'reminders' => $reminders,
         ]);
-
-        // [
-        //     ['email' => 'lpage@example.com'],
-        //     ['email' => 'sbrin@example.com'],
-        // ]
 
         $event = $this->service->events->insert($calendar_id, $event);
 
@@ -73,15 +68,15 @@ class Calendar
 
     public function read(string $calendar_id)
     {
-        $optParams = [
-            'maxResults' => 10,
-            'orderBy' => 'startTime',
-            'singleEvents' => true,
-            'timeMin' => date('c'),
-        ];
+        // $optParams = [
+        //     'maxResults' => 10,
+        //     'orderBy' => 'startTime',
+        //     'singleEvents' => true,
+        //     'timeMin' => date('c'),
+        // ];
         $response = $this->service->events->listEvents($calendar_id, $optParams);
-        $values = $response->getItems();
+        $events = $response->getItems();
 
-        return $values;
+        return $events;
     }
 }
