@@ -42,8 +42,12 @@ class Calendar
      * @param string $drip_id - Current user Drip ID for update
      * @param array $custom_fields - Array of custom fields to save to user
      */
-    public function add(string $calendar_id, string $summary, string $location = '', string $description = '', string $start, string $end, $timezone, array $recurrence = [], array $attendees, array $reminders = [])
+    public function add(string $calendar_id, string $summary, string $location = '', string $description = '', string $start, string $end, $timezone, array $recurrence = [], array $attendees = [], array $reminders = [])
     {
+        // Format start / end times
+        $start = date("c", strtotime($start));
+        $end = date("c", strtotime($end));
+
         $event = new Google_Service_Calendar_Event([
             'summary' => $summary,
             'location' => $location,
