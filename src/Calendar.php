@@ -100,4 +100,30 @@ class Calendar
 
         return $values;
     }
+
+    /**
+     * Check availability
+     *
+     * @param string $calendar_id - Calendar ID
+     * @param string $start - Start date / time
+     * @param string $end - End date / time
+     * @param string $timezone - Timezone for request
+     */
+    public function checkAvailability(string $calendar_id, string $start, string $end, string $timezone)
+    {
+        // Format start / end times
+        $start = date("c", strtotime($start));
+        $end = date("c", strtotime($end));
+
+        $freebusy_req = new Google_Service_Calendar_FreeBusyRequest();
+        $freebusy_req->setTimeMin($start);
+        $freebusy_req->setTimeMax($end);
+        $freebusy_req->setTimeZone($timezone);
+
+        $item = new Google_Service_Calendar_FreeBusyRequestItem();
+        $item->setId($calendar_id);
+        $freebusy_req->setItems([$item]);
+
+        return $this->service->freebusy->query($freebusy_req)->calendars[$calendar_id]->busy;
+    }
 }
