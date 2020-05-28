@@ -2,7 +2,7 @@
 
 namespace AliasProject\Google;
 
-use Google_Client, Google_Service_Calendar, Google_Service_Calendar_Event;
+use Google_Client, Google_Service_Calendar, Google_Service_Calendar_Event, Google_Service_Calendar_FreeBusyRequest, Google_Service_Calendar_FreeBusyRequestItem;
 
 class Calendar
 {
