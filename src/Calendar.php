@@ -27,7 +27,7 @@ class Calendar
             $this->client->setAuthConfig($config);
         }
 
-        $this->client->addScope(Google_Service_Calendar::CALENDAR_EVENTS);
+        $this->client->addScope(Google_Service_Calendar::CALENDAR);
         $this->client->setApplicationName($applicationName);
         $this->client->setAccessType('offline');
 
