@@ -48,7 +48,7 @@ class Calendar
      * @param array $recurrence - Recurrence of event
      * @param array $attendees - Attendees for event
      */
-    public function createEvent(string $calendar_id, string $summary, string $location = '', string $description = '', string $start, string $end, string $timezone, array $recurrence = [], array $attendees = [], array $reminders = [])
+    public function createEvent(string $calendar_id, string $summary, string $start, string $end, string $timezone, string $location = '', string $description = '', array $recurrence = [], array $attendees = [], array $reminders = [])
     {
         // Format start / end times
         $start = date("c", strtotime($start));
