@@ -2,7 +2,11 @@
 
 namespace AliasProject\Google;
 
-use Google_Client, Google_Service_Calendar, Google_Service_Calendar_Event, Google_Service_Calendar_FreeBusyRequest, Google_Service_Calendar_FreeBusyRequestItem;
+use Google_Client,
+    Google_Service_Calendar,
+    Google_Service_Calendar_Event,
+    Google_Service_Calendar_FreeBusyRequest,
+    Google_Service_Calendar_FreeBusyRequestItem;
 
 class Calendar
 {
@@ -15,8 +19,10 @@ class Calendar
      * @param string $config - API Config
      * @param string $applicationName - Application Name
      */
-    public function __construct($config = false, string $applicationName = 'Google Calendar')
-    {
+    public function __construct(
+        $config = false,
+        string $applicationName = "Google Calendar"
+    ) {
         // Set Client
         $this->client = new Google_Client();
 
@@ -29,7 +35,7 @@ class Calendar
 
         $this->client->addScope(Google_Service_Calendar::CALENDAR);
         $this->client->setApplicationName($applicationName);
-        $this->client->setAccessType('offline');
+        $this->client->setAccessType("offline");
 
         // Set Service
         $this->service = new Google_Service_Calendar($this->client);
@@ -48,27 +54,37 @@ class Calendar
      * @param array $recurrence - Recurrence of event
      * @param array $attendees - Attendees for event
      */
-    public function createEvent(string $calendar_id, string $summary, string $start, string $end, string $timezone, string $location = '', string $description = '', array $recurrence = [], array $attendees = [], array $reminders = [])
-    {
+    public function createEvent(
+        string $calendar_id,
+        string $summary,
+        string $start,
+        string $end,
+        string $timezone,
+        string $location = "",
+        string $description = "",
+        array $recurrence = [],
+        array $attendees = [],
+        array $reminders = []
+    ) {
         // Format start / end times
         $start = date("c", strtotime($start));
         $end = date("c", strtotime($end));
 
         $event = new Google_Service_Calendar_Event([
-            'summary' => $summary,
-            'location' => $location,
-            'description' => $description,
-            'start' => [
-                'dateTime' => $start,
-                'timeZone' => $timezone,
+            "summary" => $summary,
+            "location" => $location,
+            "description" => $description,
+            "start" => [
+                "dateTime" => $start,
+                "timeZone" => $timezone,
             ],
-            'end' => [
-                'dateTime' => $end,
-                'timeZone' => $timezone,
+            "end" => [
+                "dateTime" => $end,
+                "timeZone" => $timezone,
             ],
-            'recurrence' => $recurrence, // [ 'RRULE:FREQ=DAILY;COUNT=2' ]
-            'attendees' => $attendees,
-            'reminders' => $reminders,
+            "recurrence" => $recurrence, // [ 'RRULE:FREQ=DAILY;COUNT=2' ]
+            "attendees" => $attendees,
+            "reminders" => $reminders,
         ]);
 
         $event = $this->service->events->insert($calendar_id, $event);
@@ -83,15 +99,18 @@ class Calendar
      * @param string $date - Only return events for specific date
      * @param string $timezone - Results based on specific timezone
      */
-    public function listEvents(string $calendar_id, string $date = '', string $timezone = '')
-    {
+    public function listEvents(
+        string $calendar_id,
+        string $date = "",
+        string $timezone = ""
+    ) {
         $opts = [];
 
         if ($date) {
             $opts = [
-                'timeMin' => date("c", strtotime($date . '00:00:00')),
-                'timeMax' => date("c", strtotime($date . '23:59:59')),
-                'timeZone' => $timezone
+                "timeMin" => date("c", strtotime($date . "00:00:00")),
+                "timeMax" => date("c", strtotime($date . "23:59:59")),
+                "timeZone" => $timezone,
             ];
         }
 
@@ -102,6 +121,21 @@ class Calendar
     }
 
     /**
+     * Validate Calendar
+     *
+     * @param string $calendar_id - Calendar ID
+     */
+    public function validateCalendar(string $calendar_id)
+    {
+        try {
+            $this->service->calendars->get($calendar_id);
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
      * Check availability
      *
      * @param string $calendar_id - Calendar ID
@@ -109,8 +143,12 @@ class Calendar
      * @param string $end - End date / time
      * @param string $timezone - Timezone for request
      */
-    public function checkAvailability(string $calendar_id, string $start, string $end, string $timezone)
-    {
+    public function checkAvailability(
+        string $calendar_id,
+        string $start,
+        string $end,
+        string $timezone
+    ) {
         // Format start / end times
         $start = date("c", strtotime($start));
         $end = date("c", strtotime($end));
@@ -124,6 +162,8 @@ class Calendar
         $item->setId($calendar_id);
         $freebusy_req->setItems([$item]);
 
-        return $this->service->freebusy->query($freebusy_req)->calendars[$calendar_id]->busy;
+        return $this->service->freebusy->query($freebusy_req)->calendars[
+            $calendar_id
+        ]->busy;
     }
 }
