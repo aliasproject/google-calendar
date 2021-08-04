@@ -93,6 +93,19 @@ class Calendar
     }
 
     /**
+     * Delete an Event
+     *
+     * @param string $calendar_id - Calendar ID
+     * @param string $event_id - ID of event to delete
+     */
+    public function deleteEvent(string $calendar_id, string $event_id)
+    {
+        $event = $this->service->events->delete($calendar_id, $event_id);
+
+        return $event;
+    }
+
+    /**
      * List events
      *
      * @param string $calendar_id - Calendar ID
