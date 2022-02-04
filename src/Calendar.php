@@ -144,7 +144,7 @@ class Calendar
             $this->service->calendars->get($calendar_id);
             return true;
         } catch (\Exception $e) {
-            return false;
+            return $e->getMessage();
         }
     }
 
