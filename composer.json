@@ -12,15 +12,15 @@
         }
     ],
     "require": {
-        "php": "~7.0|~8.0",
+        "php": "~7.0|~8.0|^8.1",
         "google/apiclient": "^2.0"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "7.5.*"
     },
     "autoload": {
         "psr-4": {
             "AliasProject\\Google\\": "src"
         }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.0"
     }
 }
